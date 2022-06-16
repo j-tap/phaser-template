@@ -1,18 +1,15 @@
-import { Scene } from 'phaser'
-
-import configGame from '@/configs/game'
+import { Scene, Scale } from 'phaser'
 
 export default class SceneGame extends Scene
 {
   preload ()
   {
-    this.configGame = configGame
-    this.cameras.main.setBackgroundColor(this.configGame.colorBg)
+    //
   }
 
   create ()
   {
-    //
+    this.scale.lockOrientation(this.game.config.orientation)
   }
 
   update ()

@@ -10,7 +10,7 @@ export default class Scene1 extends SceneGame
   create ()
   {
     super.create()
-
+    console.log('create');
     this.add.image(200, 200, 'charImg')
   }
 

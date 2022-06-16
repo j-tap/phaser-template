@@ -10,7 +10,7 @@ module.exports = (env) =>
 	const title = 'TITLE'
 	const description = 'DESCRIPTION'
   const colorTheme = '#32C9C9'
-	const ogimageUrl = 'assets/img/app/og-image.png'
+	const ogimageUrl = 'assets/images/app/og-image.png'
 	const faviconHeadHtml = faviconData ? faviconData.favicon.html_code : ''
 
 	return {
@@ -40,7 +40,6 @@ module.exports = (env) =>
 		},
 
     resolve: {
-      extensions: ['.js', '.styl', '.png', '.mp3'],
       alias: {
         '@': path.resolve(__dirname, './src'),
       },
@@ -99,7 +98,7 @@ module.exports = (env) =>
           test: /\.(png|jpg|svg|gif|json)$/,
           type: 'asset/resource',
           generator: {
-            filename: 'assets/img/[hash][ext]'
+            filename: 'assets/images/[hash][ext]'
           },
         },
         {

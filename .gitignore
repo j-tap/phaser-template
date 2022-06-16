@@ -7,3 +7,5 @@
 .eslintcache
 .editorconfig
 package-lock.json
+
+/dist

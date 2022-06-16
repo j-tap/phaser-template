@@ -1,9 +1,11 @@
 # Phaser 3 template
-Basic game template in Phaser.js
-Building with webpack
-Favicon generator config - [realfavicongenerator.net](https://realfavicongenerator.net/)
+
+Basic game template in Phaser.js 
+Building with webpack 
+Favicon generator config - [realfavicongenerator.net](https://realfavicongenerator.net/) 
 
 #### Used in the project
+
 - [Phaser 3](https://github.com/photonstorm/phaser)
 
 #### Install
