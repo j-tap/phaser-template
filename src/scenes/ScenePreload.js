@@ -1,52 +1,44 @@
 import SceneGame from '@/objects/SceneGame'
 
 import charImg from '@/assets/images/char.png'
-import progressSpr from '@/assets/images/progress-spr.png'
-import progressAtlas from '@/assets/images/progress-atlas.json'
+import bgImg from '@/assets/images/bg.jpg'
 
 export default class ScenePreload extends SceneGame
 {
   constructor ()
   {
     super('ScenePreload')
-    console.log(this);
     this.width = 600
-    console.log(this);
   }
 
   preload ()
   {
     super.preload()
 
-    this.preloaderDraw()
+    this.drawLoader()
 
     this.load.image('charImg', charImg)
-    this.load.atlas('progressAtlas', progressSpr, progressAtlas)
+    this.load.image('bgImg', bgImg)
   }
 
   create ()
   {
     super.create()
-
-    this.preloaderDestroy()
-    this.scene.start('Scene1')
   }
 
-  preloaderDraw ()
+  drawLoader ()
   {
     const { centerX, centerY } = this.cameras.main
-    const { colorText, fontSize, fontSizeH3 } = this.game.config.styles
+    const { colorText, fontSizeH3 } = this.game.config.styles
 
-    this.preloader = this.add.container(centerX, centerY)
+    this.loader = this.add.container(centerX, centerY)
 
-    this.progressLoader = this.add.progress(0, 0, {
-      width: this.width,
-    })
+    this.loaderProgress = this.add.progress(0, 0)
 
-    const loadingText = this.make.text({
+    const textLoading = this.make.text({
         x: 0,
-        y: -36,
-        text: 'Loading...',
+        y: -(this.loaderProgress.displayHeight + 10),
+        text: 'Loading',
         style: {
           fontSize: fontSizeH3,
           color: colorText,
@@ -54,35 +46,29 @@ export default class ScenePreload extends SceneGame
       })
       .setOrigin(.5, 0)
 
-    this.percentText = this.make.text({
-        x: 0,
-        y: 8,
-        text: '0%',
-        style: {
-          fontSize: fontSize,
-          color: colorText,
-        },
-      })
-      .setOrigin(.5, 0)
+    this.loader.add([ this.loaderProgress, textLoading])
 
-    this.preloader.add([ this.progressLoader, loadingText, this.percentText])
+    this.load
+      .on('progress', (...args) => this.updateLoader(...args))
+      .on('complete', (...args) => this.completeLoader(...args))
+  }
 
-    this.load.on('progress', (value) =>
+  destroyLoader ()
+  {
+    this.loader.destroy()
+  }
+
+  updateLoader (value)
+  {
+    this.loaderProgress.updateProgress(value)
+  }
+
+  completeLoader (value)
+  {
+    this.time.delayedCall(200, () =>
     {
-      this.preloaderUpdate(value)
+      this.destroyLoader()
+      this.game.gameService.switchLevel(this, 'Scene1')
     })
-
-    this.timedEvent = this.time.delayedCall(3000, this.ready, [], this)
-  }
-
-  preloaderDestroy ()
-  {
-    this.preloader.destroy()
-  }
-
-  preloaderUpdate (value)
-  {
-    this.percentText.setText(`${parseInt(value * 100)}%`)
-    this.progressLoader.updateProgress(value)
   }
 }

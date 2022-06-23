@@ -14,9 +14,10 @@ export default {
   
   orientation: 'landscape',
   styles: {
-    colorText: 0x222222,
+    colorText: '#222222',
+    colorTextInvert: '#ffffff',
     fontSize: 18,
-    fontSizeH3: 24
+    fontSizeH3: 26
   },
 
   /* phaser properties */
@@ -26,7 +27,7 @@ export default {
   antialias: true,
   transparent: false,
   parent: 'game',
-  backgroundColor: 0x000000,
+  backgroundColor: '#dddddd',
   physics: {
     default: 'arcade',
     arcade: {

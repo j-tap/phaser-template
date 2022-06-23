@@ -2,21 +2,16 @@ import { GameObjects } from 'phaser'
 
 export default class ProgressGameObject extends GameObjects.Container
 {
-  barObject
-  progressObject
-
-  constructor(scene, x, y, options)
+  constructor(scene, x, y, options = {})
   {
     super(scene, x, y)
 
-    this.options = options
-    this.width = this.options.width || 400
-    this.height = 102
-    this.padding = {
-      x: 5,
-      y: 5,
-    }
-    this.atlasName = 'progressAtlas'
+    this.width = options.width || 300
+    this.height = options.height || 40
+    this.padding = options.padding || { x: 5, y: 5 }
+    this.progressWidth = this.width - this.padding.x * 2
+    this.progressHeight = this.height - this.padding.y * 2
+    this.colorBar = 0xDC4D8D
 
     this.#draw()
   }
@@ -24,87 +19,55 @@ export default class ProgressGameObject extends GameObjects.Container
   #draw ()
   {
     this.#drawBar()
-    this.#drawProgress()
-
-    this.add([this.barObject, this.progressObject])
-    this.setScale(.4)
+    this.#drawPercent()
   }
 
   #drawBar ()
   {
-    const width = this.width
-    const barLeft = this.scene.add.image(0, 0, this.atlasName, 'bar-left')
-      .setOrigin(0)
+    this.progressBlock = this.scene.add.rectangle(
+      0,
+      0,
+      this.width,
+      this.height,
+      this.colorBar,
+      1,
+    )
 
-    const widthMiddle = width - barLeft.displayWidth * 2
-    const barMiddleX = barLeft.x + barLeft.displayWidth
-    const barMiddle = this.scene.add.tileSprite(barMiddleX, 0, widthMiddle, this.height, this.atlasName, 'bar-middle')
-      .setOrigin(0)
+    this.progressBar = this.scene.add.rectangle(
+      -(this.width / 2 - this.padding.x),
+      0,
+      0,
+      this.progressHeight,
+      0xffffff,
+      .6,
+    )
 
-    const barRightX = barMiddle.x + barMiddle.displayWidth
-    const barRight = this.scene.add.image(barRightX, 0, this.atlasName, 'bar-right')
-      .setOrigin(0)
-
-    this.barObject = this.scene.add.container(-(width / 2), 0, [barLeft, barMiddle, barRight])
+    this.add([this.progressBlock, this.progressBar])
   }
 
-  #drawProgress ()
+  #drawPercent ()
   {
-    const height = 86
-    const width = this.width - this.padding.x * 2
-    const progressLeft = this.scene.add.image(0, 0, this.atlasName, 'progress-left')
-      .setOrigin(0)
-      .setName('progressStart')
-      .setVisible(false)
+    const { colorText } = this.scene.game.config.styles
+    const text = '0%'
+    const size = this.progressHeight / 2
+    const x = 0
+    const y = 0
 
-    this.widthProgressMiddle = width - progressLeft.displayWidth * 2
-    const progressMiddleX = progressLeft.x + progressLeft.displayWidth
-    const progressMiddle = this.scene.add.tileSprite(progressMiddleX, 0, 0, height, this.atlasName, 'progress-middle') 
-      .setOrigin(0)
-      .setVisible(false)
-      .setName('progress')
+    const style = {
+      fontSize: size,
+      color: colorText,
+    }
 
-    const progressRight = this.scene.add.image(0, 0, this.atlasName, 'progress-right')
-      .setOrigin(0)
-      .setVisible(false)
-      .setName('progressEnd')
+    this.textPercent = this.scene.make.text({ x, y, text, style })
+      .setOrigin(.5)
 
-    this.widthProgressCap = progressRight.displayWidth
-
-    this.progressObject = this.scene.add.container(-(width / 2), this.padding.y, [
-        progressLeft, progressMiddle, progressRight
-      ])
+    this.add(this.textPercent)
   }
 
   updateProgress (value = 0)
   {
-    const progress = this.progressObject.getByName('progress')
+    this.textPercent.setText(`${parseInt(value * 100)}%`)
 
-    if (value > 0)
-    {
-      this.progressObject.getByName('progressStart')
-        .setVisible(true)
-
-      progress.setVisible(true)
-    }
-
-    this.scene.tweens.add({
-      targets: progress,
-      width: this.widthProgressMiddle * value,
-      onComplete: () =>
-      {
-        if (value === 1)
-        {
-          const progressEnd = this.progressObject.getByName('progressEnd')
-            .setX(progress.x + progress.displayWidth)
-            .setVisible(true)
-
-          this.scene.tweens.add({
-            targets: progressEnd,
-            width: this.widthProgressCap,
-          })
-        }
-      }
-    })
+    this.progressBar.width = this.progressWidth * value
   }
 }

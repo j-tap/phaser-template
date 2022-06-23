@@ -5,6 +5,7 @@ import configPhaser from '@/configs/phaser'
 import BtnPlugin from '@/plugins/btn/BtnPlugin'
 import ProgressPlugin from '@/plugins/Progress/ProgressPlugin'
 
+import SceneBoot from '@/scenes/SceneBoot'
 import ScenePreload from '@/scenes/ScenePreload'
 import Scene1 from '@/scenes/Scene1'
 
@@ -20,6 +21,7 @@ const config = {
     ],
   },
   scene: [
+    SceneBoot,
     ScenePreload,
     Scene1,
   ],

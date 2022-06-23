@@ -1,4 +1,5 @@
 import { Game } from 'phaser'
+import GameService from '@/services/GameService'
 
 export default class AppGame extends Game
 {
@@ -7,6 +8,7 @@ export default class AppGame extends Game
     super(config)
 
     this.#initCustomParameters(config)
+    this.gameService = new GameService()
   }
 
   #initCustomParameters (config)
@@ -25,19 +27,19 @@ export default class AppGame extends Game
     const w = window.innerWidth
     const h = window.innerHeight
 
-    let width = this.config.DEFAULT_WIDTH
-    let height = this.config.DEFAULT_HEIGHT
-    let maxWidth = this.config.MAX_WIDTH
-    let maxHeight = this.config.MAX_HEIGHT
-    let scaleMode = this.config.SCALE_MODE
+    const width = this.config.DEFAULT_WIDTH
+    const height = this.config.DEFAULT_HEIGHT
+    const maxWidth = this.config.MAX_WIDTH
+    const maxHeight = this.config.MAX_HEIGHT
+    const scaleMode = this.config.SCALE_MODE
 
-    let scale = Math.min(w / width, h / height)
-    let newWidth = Math.min(w / scale, maxWidth)
-    let newHeight = Math.min(h / scale, maxHeight)
+    const scale = Math.min(w / width, h / height)
+    const newWidth = Math.min(w / scale, maxWidth)
+    const newHeight = Math.min(h / scale, maxHeight)
 
-    let defaultRatio = this.config.DEFAULT_WIDTH / this.config.DEFAULT_HEIGHT
-    let maxRatioWidth = this.config.MAX_WIDTH / this.config.DEFAULT_HEIGHT
-    let maxRatioHeight = this.config.DEFAULT_WIDTH / this.config.MAX_HEIGHT
+    const defaultRatio = width / height
+    const maxRatioWidth = maxWidth / height
+    const maxRatioHeight = width / maxHeight
 
     /* smooth scaling */
     let smooth = 1
